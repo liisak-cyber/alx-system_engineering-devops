@@ -12,10 +12,7 @@ if [ ! -x /usr/sbin/nginx ]; then
 fi
 
 # Create index.html with "Hello World!"
-echo "Hello World!" > /usr/share/nginx/html/index.html
-
-# Create symbolic link to make sure the file is in the correct place
-ln -sf /usr/share/nginx/html/index.html /var/www/html/index.nginx-debian.html
+echo "Hello World!" > /var/www/html/index.html
 
 # Restart nginx without using systemctl
 service nginx restart > /dev/null 2>&1 || /etc/init.d/nginx restart > /dev/null 2>&1
