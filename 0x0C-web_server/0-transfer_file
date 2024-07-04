@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# This script transfers a file from a client to a server using SCP.
+
+# Function to display usage
+usage() {
+  echo "Usage: $0 PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
+  exit 1
+}
+
+# Check if all 4 parameters are provided
+if [ "$#" -ne 4 ]; then
+  usage
+fi
+
+# Assigning parameters to variables
+PATH_TO_FILE=$1
+IP=$2
+USERNAME=$3
+PATH_TO_SSH_KEY=$4
+
+# Check if the file exists
+if [ ! -f "$PATH_TO_FILE" ]; then
+  echo "File not found: $PATH_TO_FILE"
+  exit 1
+fi
+
+# Transfer the file using scp
+scp -o StrictHostKeyChecking=no -i "$PATH_TO_SSH_KEY" "$PATH_TO_FILE" "$USERNAME@$IP":~/ || \
+  { echo "Error: scp command failed"; exit 1; }
+
+echo "File transferred successfully to $USERNAME@$IP:~/"
+
