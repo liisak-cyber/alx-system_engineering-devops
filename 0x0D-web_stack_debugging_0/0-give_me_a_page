@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Fixing Docker container to serve "Hello Holberton" page
+
+# Start Docker container with port mapping
+docker run -p 8080:80 -d -it holbertonschool/265-0
+
+# Enter container and troubleshoot Apache configuration
+docker exec -it 47ca3994a491 /bin/bash
+
+# Check Apache status
+service apache2 status
+
+# Restart Apache if necessary
+service apache2 restart
+
+# Exit container shell and test with curl from host
+exit
+
+# Curl test
+curl 0:8080
+
