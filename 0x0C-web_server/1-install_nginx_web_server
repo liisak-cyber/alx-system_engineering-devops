@@ -1,45 +1,15 @@
 #!/usr/bin/env bash
-# Bash script to install and configure Nginx web server
+#Install nginx web server
+sudo apt-get update && sudo apt-get install nginx
 
-# Update package list and install nginx
-apt-get update -y
-apt-get install -y nginx
-
-# Check if nginx is successfully installed
-if [ ! -x /usr/sbin/nginx ]; then
-  echo "Error: Nginx installation failed."
-  exit 1
-fi
+# Start nginx service
+sudo service nginx start
 
 # Create index.html with "Hello World!"
-echo "Hello World!" > /var/www/html/index.html
+sudo touch /var/www/html/index.html
 
-# Restart nginx without using systemctl
-service nginx restart > /dev/null 2>&1 || /etc/init.d/nginx restart > /dev/null 2>&1
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Check if nginx is running
-if ! pgrep nginx > /dev/null 2>&1; then
-  echo "Error: Nginx failed to start."
-  exit 1
-fi
-
-# Verify nginx is listening on port 80
-if ! netstat -tnl | grep -q ':80 '; then
-  echo "Error: Nginx is not listening on port 80."
-  exit 1
-fi
-
-# Verify the server returns a 200 status code when querying the root URL
-if [ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost)" != "200" ]; then
-  echo "Error: Nginx did not return a 200 status code."
-  exit 1
-fi
-
-# Verify the server returns the correct content
-if ! curl -s http://localhost | grep -q "Hello World!"; then
-  echo "Error: Nginx did not return the expected content."
-  exit 1
-fi
-
-echo "Nginx installed and configured successfully!"
+# Restart Nginx to apply changes
+sudo service nginx restart
 
