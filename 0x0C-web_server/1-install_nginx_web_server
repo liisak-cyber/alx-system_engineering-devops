@@ -2,7 +2,7 @@
 # Bash script to install and configure Nginx web server
 
 # Update package list and install nginx
-apt-get update
+apt-get update -y
 apt-get install -y nginx
 
 # Check if nginx is successfully installed
@@ -30,7 +30,7 @@ if ! netstat -tnl | grep -q ':80 '; then
 fi
 
 # Verify the server returns a 200 status code when querying the root URL
-if ! curl -s -o /dev/null -w "%{http_code}" http://localhost | grep -q "200"; then
+if [ "$(curl -s -o /dev/null -w "%{http_code}" http://localhost)" != "200" ]; then
   echo "Error: Nginx did not return a 200 status code."
   exit 1
 fi
