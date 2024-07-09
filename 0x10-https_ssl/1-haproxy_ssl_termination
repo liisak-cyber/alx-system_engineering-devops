@@ -42,16 +42,39 @@ defaults
 frontend www-https
     bind *:443 ssl crt /etc/letsencrypt/live/www.holberton.online/fullchain.pem
     reqadd X-Forwarded-Proto:\ https
-    default_backend www-backend
-
-backend www-backend
-    server webserver1 127.0.0.1:80
-
-EOF
-
-# Restart HAProxy to apply the configuration
-sudo systemctl restart haproxy
-
-# Display HAProxy configuration for verification
-cat /etc/haproxy/haproxy.cfg
+    acl is_holberton hdr_sub(host) -i www.holberton.online
+    http-response set-header X-Served-By "HAProxy"
+    http-response set-header Server "HAProxy"
+    http-response set-header Content-Type "text/html"
+    http-response set-header Cache-Control "no-store"
+    http-response set-header Pragma "no-cache"
+    http-response set-header Expires "-1"
+    http-response set-header X-Frame-Options "DENY"
+    http-response set-header X-XSS-Protection "1; mode=block"
+    http-response set-header X-Content-Type-Options "nosniff"
+    http-response set-header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload"
+    http-response set-header X-Content-Security-Policy "default-src 'self'"
+    http-response set-header X-Download-Options "noopen"
+    http-response set-header X-Permitted-Cross-Domain-Policies "none"
+    http-response set-header Referrer-Policy "no-referrer"
+    http-response set-header Feature-Policy "camera 'none'"
+    http-response set-header Feature-Policy "geolocation 'none'"
+    http-response set-header Feature-Policy "microphone 'none'"
+    http-response set-header Feature-Policy "usb 'none'"
+    http-response set-header Feature-Policy "magnetometer 'none'"
+    http-response set-header Feature-Policy "midi 'none'"
+    http-response set-header Feature-Policy "encrypted-media 'none'"
+    http-response set-header Feature-Policy "fullscreen 'self'"
+    http-response set-header Feature-Policy "payment 'none'"
+    http-response set-header Feature-Policy "sync-xhr 'none'"
+    http-response set-header Feature-Policy "vr 'none'"
+    http-response set-header Content-Security-Policy-Report-Only "default-src https: data: 'unsafe-inline' 'unsafe-eval'"
+    http-response set-header Content-Security-Policy "default-src 'self'"
+    http-response set-header Access-Control-Allow-Credentials "true"
+    http-response set-header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    http-response set-header Access-Control-Allow-Headers "Content-Type, Accept, X-Requested-With"
+    http-response set-header Access-Control-Allow-Origin "*"
+    http-response set-header Access-Control-Expose-Headers "Content-Security-Policy, Content-Security-Policy-Report-Only"
+    http-response set-header Access-Control-Max-Age "3600"
+    http-response set-header Access-Control-Allow-Headers "content-security-policy, content-security-policy-report-only, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible, x-ua-compatible
 
