@@ -7,7 +7,7 @@ if ! command -v nginx > /dev/null 2>&1; then
     exit 1
 fi
 
-# Check if Nginx is already listening on port 80
+# Check if Nginx is already running
 nginx_pid=$(pidof nginx)
 if [ -z "$nginx_pid" ]; then
     echo "Starting Nginx..."
@@ -21,10 +21,10 @@ if ! curl -s -I localhost:80 | grep "HTTP/1.1 200 OK" > /dev/null; then
     echo "Configuring Nginx to listen on port 80..."
 
     # Modify Nginx configuration to listen on port 80
-    sed -i 's/^.*listen.*$/listen 80;/g' /etc/nginx/sites-available/default
+    sudo sed -i 's/^.*listen.*$/listen 80;/g' /etc/nginx/sites-available/default
 
     # Reload Nginx configuration
-    service nginx reload
+    sudo service nginx reload
 
     # Check if Nginx is now listening on port 80
     if ! curl -s -I localhost:80 | grep "HTTP/1.1 200 OK" > /dev/null; then
