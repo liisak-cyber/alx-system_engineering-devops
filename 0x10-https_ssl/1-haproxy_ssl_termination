@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Configure HAProxy for SSL termination
+# Configure HAProxy for SSL termination on port 443
 
 # Install HAProxy (if not already installed)
 sudo apt update
@@ -15,7 +15,10 @@ sudo apt install -y certbot python3-certbot-nginx
 # Generate SSL certificate for the domain
 sudo certbot --nginx -d www.holberton.online
 
-# Configure HAProxy to terminate SSL
+# Backup HAProxy configuration
+sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+
+# Update HAProxy configuration for SSL termination
 sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOF
 global
     log /dev/log    local0
@@ -35,10 +38,6 @@ defaults
     timeout connect 5000
     timeout client  50000
     timeout server  50000
-
-frontend www-http
-    bind *:80
-    redirect scheme https code 301 if !{ ssl_fc }
 
 frontend www-https
     bind *:443 ssl crt /etc/letsencrypt/live/www.holberton.online/fullchain.pem
