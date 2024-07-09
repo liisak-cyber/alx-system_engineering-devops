@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# This script audits DNS records for specified subdomains of a domain
+
+domain="$1"
+subdomain="$2"
+
+# Function to query DNS and display information
+query_dns() {
+    local sub="$1"
+    local domain="$2"
+    local record_type="A"
+
+    # Perform DNS query and extract relevant information
+    result=$(dig +short "$sub"."$domain")
+
+    if [ -z "$result" ]; then
+        echo "The subdomain $sub does not have a $record_type record"
+    else
+        echo "The subdomain $sub is a $record_type record and points to $result"
+    fi
+}
+
+# Main script logic
+if [ -z "$subdomain" ]; then
+    # List of subdomains to audit
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub in "${subdomains[@]}"; do
+        query_dns "$sub" "$domain"
+    done
+else
+    # Query specific subdomain
+    query_dns "$subdomain" "$domain"
+fi
+
