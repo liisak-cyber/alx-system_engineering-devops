@@ -11,7 +11,7 @@ fi
 nginx_pid=$(pidof nginx)
 if [ -z "$nginx_pid" ]; then
     echo "Starting Nginx..."
-    service nginx start
+    sudo service nginx start
 else
     echo "Nginx is already running."
 fi
@@ -33,5 +33,5 @@ if ! curl -s -I localhost:80 | grep "HTTP/1.1 200 OK" > /dev/null; then
     fi
 fi
 
-echo "Nginx is now listening on port 80 of all active IPv4 IPs."
+echo "Nginx is now successfully configured to listen on port 80 and serving content."
 
