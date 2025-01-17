@@ -1,53 +1,9 @@
 #!/usr/bin/env bash
-# A script that installs nginx on your server
+# Install nginx web server
 
-# Update package list and install nginx
 apt-get update -y
-apt-get install -y nginx
-
-# Allow 'Nginx HTTP' through the firewall
+apt-get install nginx -y
 ufw allow 'Nginx HTTP'
-
-# Start nginx service
+echo 'Hello World!' > /var/www/html/index.nginx-debian.htm
+echo 'Hello World!' > /var/www/html/index.htm
 service nginx start
-
-# Check if nginx is running
-if ! pgrep nginx > /dev/null 2>&1; then
-  echo "Error: Nginx failed to start."
-  echo "Nginx status:"
-  service nginx status
-  exit 1
-fi
-
-# Create a simple 'Hello World!' web page
-echo 'Hello World!' | tee /var/www/html/index.html > /dev/null
-
-# Restart nginx service
-service nginx restart
-
-# Verify nginx is listening on port 80
-if ! netstat -tnl | grep -q ':80 '; then
-  echo "Error: Nginx is not listening on port 80."
-  echo "netstat output:"
-  netstat -tnl
-  exit 1
-fi
-
-# Verify the server returns a 200 status code when querying the root URL
-HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost)
-if [ "$HTTP_STATUS" != "200" ]; then
-  echo "Error: Nginx did not return a 200 status code."
-  echo "HTTP status code: $HTTP_STATUS"
-  exit 1
-fi
-
-# Verify the server returns the correct content
-CONTENT=$(curl -s http://localhost)
-if [[ "$CONTENT" != *"Hello World!"* ]]; then
-  echo "Error: Nginx did not return the expected content."
-  echo "Content returned: $CONTENT"
-  exit 1
-fi
-
-echo "Nginx installed and configured successfully!"
-
